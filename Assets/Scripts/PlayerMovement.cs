@@ -7,18 +7,21 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] private Rigidbody rigidBody;
     [SerializeField] private GameObject cam;
+    [SerializeField] private CharacterController charController;
     [SerializeField] private float speed = 2f;
     [SerializeField] private float mouseSensitivity = 100f;
+    [SerializeField] private float  maxRotation = 80f;
     float moveX;
     float moveZ;
     bool cursorIsLocked = true;
     bool lockCursor = true;
+    float camRotX = 0;
 
     void Start()
     {
         
     }
-    private void Update()
+    private void FixedUpdate()
     {
         HandleMovement();
         RotationHandler();
@@ -26,19 +29,27 @@ public class PlayerMovement : MonoBehaviour
     }
     private void HandleMovement()
     {
-        moveX = Input.GetAxis("Horizontal") * speed;
-        moveZ = Input.GetAxis("Vertical") * speed;
-        transform.position += cam.transform.forward * moveZ + cam.transform.right * moveX;
-
+        moveX = Input.GetAxis("Horizontal");
+        moveZ = Input.GetAxis("Vertical") ;
+        //transform.position = cam.transform.forward * moveZ + cam.transform.right * moveX;
+        Vector3 movement = transform.forward * moveZ + transform.right * moveX;
+        Vector3 newDirection = new Vector3(movement.x, 0, movement.z);
+        newDirection = Vector3.Normalize(newDirection);
+        rigidBody.MovePosition(rigidBody.position + newDirection * speed * Time.deltaTime);
     }
     private void RotationHandler()
     {
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
-
+        
         transform.Rotate(Vector3.up * mouseX);
         cam.transform.Rotate(Vector3.left * mouseY);
+        camRotX -= mouseY;
+        camRotX = Mathf.Clamp(camRotX, -maxRotation, maxRotation);
+        cam.transform.localRotation = Quaternion.Euler(camRotX, 0f, 0f);
+        
     }
+
     private void CursorLock()
     {
 
