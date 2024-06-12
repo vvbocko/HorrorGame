@@ -19,7 +19,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Start()
     {
-        
+        rigidBody.freezeRotation = true;
     }
     private void FixedUpdate()
     {
