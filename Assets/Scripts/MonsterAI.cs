@@ -8,20 +8,28 @@ public class MonsterAI : MonoBehaviour
 {
     [SerializeField] private NavMeshAgent navMeshAgent;
     [SerializeField] Transform target;
-    [SerializeField] private float rangeOfSight = 8f;
+    [SerializeField] MeshRenderer headMeshRenderer;
+    [SerializeField] LayerMask playerMask;
+    [SerializeField] private float rangeOfSight = 25f;
+    [SerializeField] private float sightAngle = 60f;
     [SerializeField] private float attackRange = 2f;
+    [SerializeField] private float normalSpeed = 3.5f;
+    [SerializeField] private float slowedSpeed = 1.5f;
 
     private float distanceToTarget = Mathf.Infinity;
-
     private Vector3 walkPoint;
     private Vector3 lastKnownPosition;
     private bool isWalkPointSet;
     private bool isChasing;
     public float range = 7.0f;
+    private bool inLightedArea = false;
+    Material headMaterial;
 
     private void Start()
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
+        headMaterial = headMeshRenderer.material;
+        navMeshAgent.speed = normalSpeed;
     }
 
     private void Update()
@@ -30,18 +38,22 @@ public class MonsterAI : MonoBehaviour
 
         if (distanceToTarget <= attackRange)
         {
+            headMaterial.color = Color.red;
             AttackTarget();
         }
-        else if (distanceToTarget <= rangeOfSight)
+        else if (IsTargetVisible(distanceToTarget))
         {
+            headMaterial.color = Color.yellow;
             ChaseTarget();
         }
         else if (isChasing)
         {
+            headMaterial.color = Color.grey;
             GoToLastKnownPosition();
         }
         else
         {
+            headMaterial.color = Color.green;
             StartPatrolling();
         }
         Debug.DrawLine(transform.position, walkPoint);
@@ -65,20 +77,27 @@ public class MonsterAI : MonoBehaviour
         }
     }
 
-    bool RandomPoint(Vector3 center, float range, out Vector3 result)
+    private bool IsTargetVisible(float distanceToTarget)
     {
-        for (int i = 0; i < 30; i++)
+        if (distanceToTarget > rangeOfSight)
         {
-            Vector3 randomPoint = center + Random.insideUnitSphere * range;
-            NavMeshHit hit;
-            if (NavMesh.SamplePosition(randomPoint, out hit, 1f, NavMesh.AllAreas))
-            {
-                result = hit.position;
-                return true;
-            }
+            return false;
         }
-        result = Vector3.zero;
-        return false;
+        Vector3 directionToTarget = target.position - transform.position;
+        directionToTarget.Normalize();
+        float angle = Vector3.Angle(directionToTarget, transform.forward);
+
+        if (angle > sightAngle)
+        {
+            return false;
+        }
+
+        if (!Physics.Raycast(transform.position, directionToTarget, rangeOfSight, playerMask))
+        {
+            return false;
+        }
+        Debug.Log("Player in range of sight");
+        return true;
     }
 
     private void SetWalkPoint()
@@ -91,6 +110,28 @@ public class MonsterAI : MonoBehaviour
         {
             isWalkPointSet = false;
         }
+    }
+
+    private bool RandomPoint(Vector3 center, float range, out Vector3 result)
+    {
+        for (int i = 0; i < 30; i++)
+        {
+            Vector3 randomPoint = center + Random.insideUnitSphere * range;
+            NavMeshHit hit;
+            if (NavMesh.SamplePosition(randomPoint, out hit, 1f, NavMesh.AllAreas))
+            {
+                result = hit.position;
+
+                NavMeshPath path = new NavMeshPath();
+                navMeshAgent.CalculatePath(result, path);
+                if (path.status == NavMeshPathStatus.PathComplete)
+                {
+                    return true;
+                }
+            }
+        }
+        result = Vector3.zero;
+        return false;
     }
 
     private void ChaseTarget()
@@ -114,5 +155,17 @@ public class MonsterAI : MonoBehaviour
     private void AttackTarget()
     {
         Debug.Log("Jumpscare >:o");
+    }
+
+    public void EnterLight()
+    {
+        inLightedArea = true;
+        navMeshAgent.speed = slowedSpeed;
+    }
+
+    public void ExitLight()
+    {
+        inLightedArea = false;
+        navMeshAgent.speed = normalSpeed;
     }
 }

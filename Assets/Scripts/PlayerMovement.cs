@@ -7,7 +7,6 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] private Rigidbody rigidBody;
     [SerializeField] private GameObject cam;
-    [SerializeField] private CharacterController charController;
     [SerializeField] private float speed = 2f;
     [SerializeField] private float mouseSensitivity = 100f;
     [SerializeField] private float  maxRotation = 80f;

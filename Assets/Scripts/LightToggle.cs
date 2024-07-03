@@ -1,25 +1,36 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class LightToggle : MonoBehaviour
 {
-    private Light pointLight;
-    private NavMeshObstacle navMeshObstacle;
-
-    private void Start()
+    [SerializeField] private Light pointLight;
+    private void OnTriggerEnter(Collider other)
     {
-        pointLight = GetComponentInChildren<Light>();
-        navMeshObstacle = GetComponent<NavMeshObstacle>();
+        MonsterAI monster = other.GetComponent<MonsterAI>();
+        if (monster != null)
+        {
+            monster.EnterLight();
+        }
     }
 
-    private void OnMouseDown()
+    private void OnTriggerExit(Collider other)
+    {
+        MonsterAI monster = other.GetComponent<MonsterAI>();
+        if (monster != null)
+        {
+            monster.ExitLight();
+        }
+    }
+
+    public void ToggleLight()
     {
         if (pointLight != null)
         {
             pointLight.enabled = !pointLight.enabled;
-            navMeshObstacle.enabled = !navMeshObstacle.enabled;
         }
-    }
+    }   
 }
