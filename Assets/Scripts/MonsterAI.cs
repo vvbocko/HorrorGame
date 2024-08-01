@@ -14,7 +14,7 @@ public class MonsterAI : MonoBehaviour
     [SerializeField] private float sightAngle = 60f;
     [SerializeField] private float attackRange = 2f;
     [SerializeField] private float normalSpeed = 3.5f;
-    [SerializeField] private float slowedSpeed = 1.5f;
+    [SerializeField] private float slowedSpeed = 1f;
 
     private float distanceToTarget = Mathf.Infinity;
     private Vector3 walkPoint;

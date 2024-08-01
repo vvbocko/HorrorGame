@@ -6,7 +6,28 @@ using UnityEngine.Events;
 public class InteractableObject : MonoBehaviour
 {
     [SerializeField] public UnityEvent onInteraction;
+    [SerializeField] public Transform interactablePoint = null;
+    [SerializeField] private bool isPickable;
+    [SerializeField] public ItemDefinition itemDefinition;
 
+    public bool IsPickable
+    {
+        get
+        {
+            return isPickable;
+        }
+    }
+    public Transform GetInteractablePointTranform()
+    {
+        if(interactablePoint != null)
+        {
+            return interactablePoint;
+        }
+        else
+        {
+            return transform;
+        }
+    }
     private void OnTriggerEnter(Collider other)
     {
         InteractableObjectUser player = other.GetComponent<InteractableObjectUser>();
@@ -14,6 +35,7 @@ public class InteractableObject : MonoBehaviour
         if (player != null)
         {
             player.onClick += Interact;
+            player.SetInteractableObject(this);
         }
     }
 
@@ -24,6 +46,7 @@ public class InteractableObject : MonoBehaviour
         if (player != null)
         {
             player.onClick -= Interact;
+            player.SetInteractableObject(null);
         }
     }
 
