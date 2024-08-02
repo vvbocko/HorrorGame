@@ -8,18 +8,30 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] private float walkSpeed = 1.5f;
     [SerializeField] private float sprintSpeed = 2.5f;
+    
+    [SerializeField] private float useSpeed = 20f;
+    [SerializeField] private float regenerateSpeed = 10f;
+    [SerializeField] private float maxSprintPoints = 50f;
+    [SerializeField] private float currentSprintPoints;
 
+    [SerializeField] private float cooldownDuration = 5f;
+    private bool isCooldownActive = false;
+    private float cooldownTimer = 0f;
+
+    [Header("Camera Rotation")]
     [SerializeField] private float mouseSensitivity = 100f;
     [SerializeField] private float  maxRotation = 80f;
 
     float moveX;
     float moveZ;
+    float camRotX = 0;
     bool cursorIsLocked = true;
     bool lockCursor = true;
-    float camRotX = 0;
+    
 
     void Start()
     {
+        currentSprintPoints = maxSprintPoints;
         rigidBody.freezeRotation = true;
         CursorLock();
 
@@ -28,17 +40,42 @@ public class PlayerMovement : MonoBehaviour
     {
         HandleMovement();
         RotationHandler();
-        if (lockCursor) CursorLock();
+        
+        if (lockCursor)
+        {
+            CursorLock();
+        }
+
+        if (isCooldownActive)
+        {
+            cooldownTimer -= Time.deltaTime;
+            if (cooldownTimer <= 0f)
+            {
+                isCooldownActive = false;
+                currentSprintPoints = maxSprintPoints;
+            }
+        }
     }
 
     private void HandleMovement()
     {
         float currentSpeed = walkSpeed;
 
-        if (Input.GetKey(KeyCode.LeftShift))
+        if (Input.GetKey(KeyCode.LeftShift) && currentSprintPoints > 0f && !isCooldownActive)
         {
             currentSpeed = sprintSpeed;
+            currentSprintPoints -= Time.deltaTime * useSpeed;
         }
+        else if (currentSprintPoints < maxSprintPoints && !isCooldownActive)
+        {
+            currentSprintPoints += Time.deltaTime * regenerateSpeed;
+        }
+        if (currentSprintPoints <= 0f && !isCooldownActive)
+        {
+            isCooldownActive = true;
+            cooldownTimer = cooldownDuration;
+        }
+        currentSprintPoints = Mathf.Clamp(currentSprintPoints, 0, maxSprintPoints); 
 
         moveX = Input.GetAxis("Horizontal");
         moveZ = Input.GetAxis("Vertical") ;
@@ -47,7 +84,15 @@ public class PlayerMovement : MonoBehaviour
         Vector3 movement = transform.forward * moveZ + transform.right * moveX;
         Vector3 newDirection = new Vector3(movement.x, 0, movement.z);
         newDirection = Vector3.Normalize(newDirection);
-        rigidBody.MovePosition(rigidBody.position + newDirection * currentSpeed * Time.deltaTime);
+        //rigidBody.MovePosition(rigidBody.position + newDirection * currentSpeed * Time.deltaTime);
+        rigidBody.AddForce(newDirection * currentSpeed, ForceMode.VelocityChange );
+        
+        Vector3 flatVelocity = new Vector3(rigidBody.velocity.x, 0, rigidBody.velocity.z);
+        if (flatVelocity.magnitude > currentSpeed)
+        {
+            Vector3 limitedVelocity = flatVelocity.normalized * currentSpeed;
+            rigidBody.velocity = new Vector3(limitedVelocity.x, rigidBody.velocity.y, limitedVelocity.z);
+        }
     }
 
     private void RotationHandler()
@@ -65,7 +110,6 @@ public class PlayerMovement : MonoBehaviour
 
     private void CursorLock()
     {
-
         if (Input.GetKeyUp(KeyCode.Escape))
         {
             cursorIsLocked = false;

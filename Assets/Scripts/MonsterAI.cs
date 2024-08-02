@@ -22,7 +22,7 @@ public class MonsterAI : MonoBehaviour
     private bool isWalkPointSet;
     private bool isChasing;
     public float range = 7.0f;
-    private bool inLightedArea = false;
+    private bool inLightedArea;
     Material headMaterial;
 
     private void Start()

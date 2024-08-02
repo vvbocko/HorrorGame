@@ -150,6 +150,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  interactablePoint: {fileID: 0}
+  isPickable: 0
+  itemDefinition: {fileID: 0}
 --- !u!114 &7016196755098740683
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -20,7 +20,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 4294967295
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &4156619824367734
 Transform:
@@ -102,11 +102,11 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.44, y: 0.37, z: 0.32}
+  m_Size: {x: 0.23, y: 0.25, z: 0.26}
   m_Center: {x: 0, y: 0.1, z: 0}
 --- !u!65 &7437360795984179662
 BoxCollider:
@@ -127,8 +127,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.58, y: 2.11, z: 3.65}
-  m_Center: {x: 0.29, y: 0.25, z: 0.13}
+  m_Size: {x: 1, y: 1.74, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8075263546671000709
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -157,6 +157,8 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   interactablePoint: {fileID: 0}
+  isPickable: 1
+  itemDefinition: {fileID: 11400000, guid: 711b557a39bde9e47b437b4faa26c3c3, type: 2}
 --- !u!54 &8005962385179519923
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -183,4 +185,4 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 3
