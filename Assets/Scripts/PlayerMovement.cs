@@ -36,11 +36,11 @@ public class PlayerMovement : MonoBehaviour
         CursorLock();
 
     }
-    private void FixedUpdate()
+
+    private void Update()
     {
-        HandleMovement();
         RotationHandler();
-        
+
         if (lockCursor)
         {
             CursorLock();
@@ -55,6 +55,10 @@ public class PlayerMovement : MonoBehaviour
                 currentSprintPoints = maxSprintPoints;
             }
         }
+    }
+    private void FixedUpdate()
+    {
+        HandleMovement();
     }
 
     private void HandleMovement()
