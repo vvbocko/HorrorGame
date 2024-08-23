@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -9,7 +7,7 @@ public class InteractableObject : MonoBehaviour
     [SerializeField] public Transform interactablePoint = null;
     [SerializeField] private bool isPickable;
     [SerializeField] public ItemDefinition itemDefinition;
-
+    private bool isSubscribed = false;
     public bool IsPickable
     {
         get
@@ -30,10 +28,12 @@ public class InteractableObject : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
+        
         InteractableObjectUser player = other.GetComponent<InteractableObjectUser>();
 
-        if (player != null)
+        if (player != null && !isSubscribed)
         {
+            isSubscribed = true;
             player.onClick += Interact;
             player.SetInteractableObject(this);
         }
@@ -43,8 +43,9 @@ public class InteractableObject : MonoBehaviour
     {
         InteractableObjectUser player = other.GetComponent<InteractableObjectUser>();
 
-        if (player != null)
+        if (player != null && isSubscribed)
         {
+            isSubscribed = false;
             player.onClick -= Interact;
             player.SetInteractableObject(null);
         }
