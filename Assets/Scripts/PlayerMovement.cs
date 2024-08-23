@@ -4,7 +4,8 @@ public class PlayerMovement : MonoBehaviour
 {
 
     [SerializeField] private Rigidbody rigidBody;
-    [SerializeField] private GameObject cam;
+    [SerializeField] private HeadBobController headBob;
+    
 
     [SerializeField] private float walkSpeed = 1.5f;
     [SerializeField] private float sprintSpeed = 2.5f;
@@ -15,36 +16,25 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float currentSprintPoints;
 
     [SerializeField] private float cooldownDuration = 5f;
-    private bool isCooldownActive = false;
     private float cooldownTimer = 0f;
 
-    [Header("Camera Rotation")]
-    [SerializeField] private float mouseSensitivity = 100f;
-    [SerializeField] private float  maxRotation = 80f;
+    private bool isCooldownActive = false;
+    private bool isSprinting = false;
+
 
     float moveX;
     float moveZ;
-    float camRotX = 0;
-    bool cursorIsLocked = true;
-    bool lockCursor = true;
     
 
     void Start()
     {
         currentSprintPoints = maxSprintPoints;
         rigidBody.freezeRotation = true;
-        CursorLock();
 
     }
-
-    private void Update()
+    private void FixedUpdate()
     {
-        RotationHandler();
-
-        if (lockCursor)
-        {
-            CursorLock();
-        }
+        HandleMovement();
 
         if (isCooldownActive)
         {
@@ -56,10 +46,6 @@ public class PlayerMovement : MonoBehaviour
             }
         }
     }
-    private void FixedUpdate()
-    {
-        HandleMovement();
-    }
 
     private void HandleMovement()
     {
@@ -69,17 +55,30 @@ public class PlayerMovement : MonoBehaviour
         {
             currentSpeed = sprintSpeed;
             currentSprintPoints -= Time.deltaTime * useSpeed;
+            if (!isSprinting)
+            {
+                isSprinting = true;
+                headBob.IncreaseHeadBob(); // Increase bobbing values
+            }
         }
-        else if (currentSprintPoints < maxSprintPoints && !isCooldownActive)
+        else
         {
-            currentSprintPoints += Time.deltaTime * regenerateSpeed;
+            if (isSprinting)
+            {
+                isSprinting = false;
+                headBob.RestartHeadBob(); // Reset bobbing values
+            }
+            if (currentSprintPoints < maxSprintPoints && !isCooldownActive)
+            {
+                currentSprintPoints += Time.deltaTime * regenerateSpeed;
+            }
         }
         if (currentSprintPoints <= 0f && !isCooldownActive)
         {
             isCooldownActive = true;
             cooldownTimer = cooldownDuration;
         }
-        currentSprintPoints = Mathf.Clamp(currentSprintPoints, 0, maxSprintPoints); 
+            currentSprintPoints = Mathf.Clamp(currentSprintPoints, 0, maxSprintPoints); 
 
         moveX = Input.GetAxis("Horizontal");
         moveZ = Input.GetAxis("Vertical") ;
@@ -92,46 +91,11 @@ public class PlayerMovement : MonoBehaviour
         rigidBody.AddForce(newDirection * currentSpeed, ForceMode.VelocityChange );
         
         Vector3 flatVelocity = new Vector3(rigidBody.velocity.x, 0, rigidBody.velocity.z);
+        
         if (flatVelocity.magnitude > currentSpeed)
         {
             Vector3 limitedVelocity = flatVelocity.normalized * currentSpeed;
             rigidBody.velocity = new Vector3(limitedVelocity.x, rigidBody.velocity.y, limitedVelocity.z);
-        }
-    }
-
-    private void RotationHandler()
-    {
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
-        
-        transform.Rotate(Vector3.up * mouseX);
-        cam.transform.Rotate(Vector3.left * mouseY);
-        camRotX -= mouseY;
-        camRotX = Mathf.Clamp(camRotX, -maxRotation, maxRotation);
-        cam.transform.localRotation = Quaternion.Euler(camRotX, 0f, 0f);
-        
-    }
-
-    private void CursorLock()
-    {
-        if (Input.GetKeyUp(KeyCode.Escape))
-        {
-            cursorIsLocked = false;
-        }
-        else if (Input.GetMouseButtonUp(1))
-        {
-            cursorIsLocked = true;
-        }
-
-        if (cursorIsLocked)
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-        }
-        else
-        {
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
         }
     }
 }
