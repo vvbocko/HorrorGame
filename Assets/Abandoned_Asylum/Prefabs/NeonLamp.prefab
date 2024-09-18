@@ -11,10 +11,10 @@ GameObject:
   - component: {fileID: 4369005094392084}
   - component: {fileID: 33225400113327444}
   - component: {fileID: 23802013872350056}
-  - component: {fileID: 5777556438664240882}
-  - component: {fileID: 5379394060267165494}
   - component: {fileID: 3670063666916161112}
   - component: {fileID: 6618892679821270178}
+  - component: {fileID: 5777556438664240882}
+  - component: {fileID: 5379394060267165494}
   m_Layer: 0
   m_Name: NeonLamp
   m_TagString: Untagged
@@ -89,6 +89,48 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &3670063666916161112
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1235368791355058}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.33, y: 1.85, z: 1.52}
+  m_Center: {x: 0.29, y: 0.12, z: 0}
+--- !u!65 &6618892679821270178
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1235368791355058}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.99974, y: 0.16875003, z: 0.264294}
+  m_Center: {x: 0.0000000023022293, y: -0.07725, z: 0}
 --- !u!114 &5777556438664240882
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -134,48 +176,8 @@ MonoBehaviour:
   playerCamera: {fileID: 0}
   lampCamera: {fileID: 3879600870740585191}
   isLampViewActive: 0
---- !u!65 &3670063666916161112
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1235368791355058}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 2.33, y: 1.85, z: 1.52}
-  m_Center: {x: 0.29, y: 0.12, z: 0}
---- !u!65 &6618892679821270178
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1235368791355058}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.99974, y: 0.16875003, z: 0.264294}
-  m_Center: {x: 0.0000000023022293, y: -0.07725, z: 0}
+  maxRotation: 90
+  mouseSensitivity: 120
 --- !u!1 &1965288969357466
 GameObject:
   m_ObjectHideFlags: 0

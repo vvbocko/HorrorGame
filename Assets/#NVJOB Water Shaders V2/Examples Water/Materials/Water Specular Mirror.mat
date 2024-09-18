@@ -15,7 +15,6 @@ Material:
   - EFFECT_ALBEDO2
   - EFFECT_FOAM
   - EFFECT_MICROWAVE
-  - EFFECT_MIRROR
   - EFFECT_NORMALMAP2
   - EFFECT_PARALLAX
   - EFFECT_REFLECTION
@@ -208,10 +207,10 @@ Material:
     - _MicrowaveStrength: 1.4
     - _MinuteDetailIntensity: 1.455
     - _MinuteDetailScrollSpeed: 0.089
-    - _MirrorContrast: 1.02
+    - _MirrorContrast: 0.58
     - _MirrorFPOW: 1.55
     - _MirrorR0: 0.23
-    - _MirrorSaturation: 1.41
+    - _MirrorSaturation: 0.26
     - _MirrorStrength: 0.94
     - _MirrorWaveFlow: 6
     - _MirrorWavePow: 0.3
@@ -278,7 +277,7 @@ Material:
     - _EmissionColor: {r: 0.5441177, g: 0.5441177, b: 0.5441177, a: 1}
     - _FoamColor: {r: 0.25099865, g: 0.30817598, b: 0.25099865, a: 1}
     - _FoamSoft: {r: 0.16, g: 0.3, b: 2, a: 0}
-    - _MirrorColor: {r: 1, g: 1, b: 1, a: 0.5}
+    - _MirrorColor: {r: 0.6415094, g: 0.6415094, b: 0.6415094, a: 0.5}
     - _MirrorDepthColor: {r: 0.028242514, g: 0.035714656, b: 0.17610055, a: 1}
     - _MirrorReflectionColor: {r: 1, g: 1, b: 1, a: 0.5}
     - _ReflectColor: {r: 1, g: 1, b: 1, a: 1}

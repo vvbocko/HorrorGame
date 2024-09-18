@@ -1,23 +1,23 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class MonsterAI : MonoBehaviour
 {
     [SerializeField] private NavMeshAgent navMeshAgent;
-    [SerializeField] Transform target;
+    [SerializeField] Transform player;
     [SerializeField] MeshRenderer headMeshRenderer;
     [SerializeField] LayerMask playerMask;
+    [SerializeField] LayerMask obstacleMask;
     [SerializeField] private float rangeOfSight = 25f;
-    [SerializeField] private float sightAngle = 60f;
-    [SerializeField] private float attackRange = 2f;
+    [SerializeField] private float sightAngle = 50f;
+    [SerializeField] private float attackRange = 1.5f;
+    [SerializeField] private float minTargetDistance = 1.6f;
     [SerializeField] private float normalSpeed = 3.5f;
     [SerializeField] private float slowedSpeed = 1f;
+    [SerializeField] private float retreatDistance = 10f;
 
     private float distanceToTarget = Mathf.Infinity;
-    private Vector3 walkPoint;
+    private Vector3 targetPosition;
     private Vector3 lastKnownPosition;
     private bool isWalkPointSet;
     private bool isChasing;
@@ -27,21 +27,17 @@ public class MonsterAI : MonoBehaviour
 
     private void Start()
     {
+
         navMeshAgent = GetComponent<NavMeshAgent>();
         headMaterial = headMeshRenderer.material;
         navMeshAgent.speed = normalSpeed;
+        StartPatrolling();
+
     }
 
     private void Update()
     {
-        distanceToTarget = Vector3.Distance(transform.position, target.position);
-
-        if (distanceToTarget <= attackRange)
-        {
-            headMaterial.color = Color.red;
-            AttackTarget();
-        }
-        else if (IsTargetVisible(distanceToTarget))
+        if (IsPlayertVisible(distanceToTarget)) //bool dontChaseTarget, wymusiæ nowy punkt sprawdzajac co 3 sekundy
         {
             headMaterial.color = Color.yellow;
             ChaseTarget();
@@ -51,66 +47,73 @@ public class MonsterAI : MonoBehaviour
             headMaterial.color = Color.grey;
             GoToLastKnownPosition();
         }
+
+        distanceToTarget = Vector3.Distance(transform.position, targetPosition);
+
+        if (distanceToTarget > minTargetDistance && CanReachTarget())
+        {
+            GoToTarget();  
+        }
         else
         {
             headMaterial.color = Color.green;
             StartPatrolling();
         }
-        Debug.DrawLine(transform.position, walkPoint);
+
+        if (distanceToTarget <= attackRange)
+        {
+            headMaterial.color = Color.red;
+            AttackTarget();
+        }
+        //else if (IsPlayertVisible(distanceToTarget) && CanReachTarget())
+        //{
+
+        //    headMaterial.color = Color.yellow;
+        //    RotateTowardsTarget(player.position);
+        //    ChaseTarget();
+        //}
+        //else if (isChasing)
+        //{
+        //    headMaterial.color = Color.grey;
+        //    GoToLastKnownPosition();
+        //}
+        //else
+        //{
+        //    headMaterial.color = Color.green;
+        //    StartPatrolling();
+        //}
+
+        Debug.DrawLine(transform.position, targetPosition);
     }
 
-    private void StartPatrolling()
+    private bool IsPlayertVisible(float distanceToPlayer)
     {
-        if (!isWalkPointSet)
-        {
-            SetWalkPoint();
-        }
-
-        if (isWalkPointSet)
-        {
-            navMeshAgent.SetDestination(walkPoint);
-        }
-
-        if (navMeshAgent.remainingDistance < 1f && !navMeshAgent.pathPending)
-        {
-            isWalkPointSet = false;
-        }
-    }
-
-    private bool IsTargetVisible(float distanceToTarget)
-    {
-        if (distanceToTarget > rangeOfSight)
+        if (distanceToPlayer > rangeOfSight)
         {
             return false;
         }
-        Vector3 directionToTarget = target.position - transform.position;
-        directionToTarget.Normalize();
-        float angle = Vector3.Angle(directionToTarget, transform.forward);
+
+        Vector3 directionToPlayer = (player.position - transform.position).normalized;
+        float angle = Vector3.Angle(directionToPlayer, transform.forward);
 
         if (angle > sightAngle)
         {
             return false;
         }
-
-        if (!Physics.Raycast(transform.position, directionToTarget, rangeOfSight, playerMask))
+        //check if there is a wall in between
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, directionToPlayer, out hit, rangeOfSight, playerMask | obstacleMask)) //if rwycast hits obstacleMask first player will not be visible
         {
-            return false;
+            if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Player"))
+            {
+                Debug.Log("Player in range and visible.");
+                return true;
+            }
         }
-        Debug.Log("Player in range of sight");
-        return true;
+
+        return false;
     }
 
-    private void SetWalkPoint()
-    {
-        if (RandomPoint(transform.position, range, out walkPoint))
-        {
-            isWalkPointSet = true;
-        }
-        else
-        {
-            isWalkPointSet = false;
-        }
-    }
 
     private bool RandomPoint(Vector3 center, float range, out Vector3 result)
     {
@@ -134,16 +137,37 @@ public class MonsterAI : MonoBehaviour
         return false;
     }
 
+    private void GoToTarget()
+    {
+        navMeshAgent.SetDestination(targetPosition);
+    }
+    private bool CanReachTarget() //can monster find exxisting path to the player
+    {
+        NavMeshPath path = new NavMeshPath();
+        navMeshAgent.CalculatePath(targetPosition, path);
+        if (path.status == NavMeshPathStatus.PathPartial || path.status == NavMeshPathStatus.PathInvalid)
+        {
+            return false;
+        }
+        return true;
+    }
+    private void SetTarget(Vector3 target)
+    {
+        targetPosition = target;
+    }
+
     private void ChaseTarget()
     {
-        navMeshAgent.SetDestination(target.position);
-        lastKnownPosition = target.position;
+        SetTarget(player.position);
+        lastKnownPosition = player.position;
         isChasing = true;
+
+        RotateTowardsTarget(player.position);
     }
 
     private void GoToLastKnownPosition()
     {
-        navMeshAgent.SetDestination(lastKnownPosition);
+        SetTarget(lastKnownPosition);
 
         if (Vector3.Distance(transform.position, lastKnownPosition) < 1f)
         {
@@ -151,14 +175,69 @@ public class MonsterAI : MonoBehaviour
             StartPatrolling();
         }
     }
+    public void Retreat()
+    {
+        Vector3 directionAwayFromTarget = transform.position - player.position;
+        directionAwayFromTarget.Normalize();
+        Vector3 retreatPosition = transform.position + directionAwayFromTarget * retreatDistance;
 
+        NavMeshHit hit;
+        if (NavMesh.SamplePosition(retreatPosition, out hit, 1.0f, NavMesh.AllAreas))
+        {
+            //isWalkPointSet = true;
+            SetTarget(hit.position);
+        }
+    }
+    private void StartPatrolling()
+    {
+        Vector3 randomTarget;
+        if (RandomPoint(transform.position, range, out randomTarget))
+        {
+            SetTarget(randomTarget);
+            //isWalkPointSet = true;
+        }
+        else
+        {
+            SetTarget(transform.position);
+        }
+        //if (!isWalkPointSet)
+        //{
+
+        //    Vector3 randomTarget ;
+        //    if (RandomPoint(transform.position, range, out randomTarget))
+        //    {
+        //        isWalkPointSet = true;
+        //    }
+        //    else
+        //    {
+        //        isWalkPointSet = false;
+        //    }
+        //}
+
+        //if (isWalkPointSet)
+        //{
+        //    navMeshAgent.SetDestination(targetPosition);
+        //}
+
+        //if (navMeshAgent.remainingDistance < 1f && !navMeshAgent.pathPending)
+        //{
+        //    isWalkPointSet = false;
+        //}
+    }
     private void AttackTarget()
     {
         Debug.Log("Jumpscare >:o");
     }
+    private void RotateTowardsTarget(Vector3 targetPosition)
+    {
+        Vector3 direction = (targetPosition - transform.position).normalized;
+        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f); // 5f to rotation speed
+    }
 
     public void EnterLight()
     {
+        Retreat();
         inLightedArea = true;
         navMeshAgent.speed = slowedSpeed;
     }
