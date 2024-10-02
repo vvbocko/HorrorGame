@@ -27,7 +27,12 @@ public class MonsterAI : MonoBehaviour
 
     private void Start()
     {
-
+        if (GameManager.IsSpawned)
+        {
+            //This is how you can access GameManager, through the "Instance" static property
+            GameManager.Instance.SayHello();
+        }
+        
         navMeshAgent = GetComponent<NavMeshAgent>();
         headMaterial = headMeshRenderer.material;
         navMeshAgent.speed = normalSpeed;
@@ -37,7 +42,7 @@ public class MonsterAI : MonoBehaviour
 
     private void Update()
     {
-        if (IsPlayertVisible(distanceToTarget)) //bool dontChaseTarget, wymusiæ nowy punkt sprawdzajac co 3 sekundy
+        if (IsPlayertVisible(distanceToTarget)) //bool dontChaseTarget, wymusiï¿½ nowy punkt sprawdzajac co 3 sekundy
         {
             headMaterial.color = Color.yellow;
             ChaseTarget();
