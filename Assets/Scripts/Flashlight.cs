@@ -8,7 +8,7 @@ public class Flashlight : MonoBehaviour
     [SerializeField] private float flashlightRange = 15f;
     [SerializeField] private LayerMask monsterMask;
 
-    private bool sk;
+    //private bool sk;
 
 
 

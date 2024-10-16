@@ -30,7 +30,12 @@ public class MonsterAI : MonoBehaviour
 
     private void Start()
     {
-
+        if (GameManager.IsSpawned)
+        {
+            //This is how you can access GameManager, through the "Instance" static property
+            GameManager.Instance.SayHello();
+        }
+        
         navMeshAgent = GetComponent<NavMeshAgent>();
         headMaterial = headMeshRenderer.material;
         navMeshAgent.speed = normalSpeed;
