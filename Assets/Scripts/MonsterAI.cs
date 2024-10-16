@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -13,7 +14,7 @@ public class MonsterAI : MonoBehaviour
     [SerializeField] private float attackRange = 1.5f;
     [SerializeField] private float minTargetDistance = 1.6f;
     [SerializeField] private float normalSpeed = 3.5f;
-    [SerializeField] private float slowedSpeed = 1f;
+    [SerializeField] private float retreatSpeed = 5f;
     [SerializeField] private float retreatDistance = 10f;
 
     private float distanceToTarget = Mathf.Infinity;
@@ -21,9 +22,11 @@ public class MonsterAI : MonoBehaviour
     private Vector3 lastKnownPosition;
     private bool isWalkPointSet;
     private bool isChasing;
+    private bool blockChasing;
     public float range = 7.0f;
     private bool inLightedArea;
     Material headMaterial;
+    Coroutine IgnorePlayerCoroutine;
 
     private void Start()
     {
@@ -37,7 +40,7 @@ public class MonsterAI : MonoBehaviour
 
     private void Update()
     {
-        if (IsPlayertVisible(distanceToTarget)) //bool dontChaseTarget, wymusiæ nowy punkt sprawdzajac co 3 sekundy
+        if (!blockChasing && IsPlayertVisible(distanceToTarget)) //
         {
             headMaterial.color = Color.yellow;
             ChaseTarget();
@@ -48,11 +51,23 @@ public class MonsterAI : MonoBehaviour
             GoToLastKnownPosition();
         }
 
-        distanceToTarget = Vector3.Distance(transform.position, targetPosition);
+        Vector3 flatPosition = new Vector3 (transform.position.x, 0,transform.position.z);
+        Vector3 flatTargetPosition = new Vector3 (targetPosition.x, 0, targetPosition.z );
+
+        distanceToTarget = Vector3.Distance(flatPosition, flatTargetPosition);
 
         if (distanceToTarget > minTargetDistance && CanReachTarget())
         {
             GoToTarget();  
+        }
+        else if (isChasing && !CanReachTarget())
+        {
+            if(IgnorePlayerCoroutine != null)
+            {
+                StopCoroutine(IgnorePlayerCoroutine);
+            }
+            IgnorePlayerCoroutine = StartCoroutine(IgnorePlayerAndPatrol());
+            StartPatrolling();
         }
         else
         {
@@ -65,6 +80,7 @@ public class MonsterAI : MonoBehaviour
             headMaterial.color = Color.red;
             AttackTarget();
         }
+        Debug.DrawLine(transform.position, targetPosition);
         //else if (IsPlayertVisible(distanceToTarget) && CanReachTarget())
         //{
 
@@ -82,8 +98,6 @@ public class MonsterAI : MonoBehaviour
         //    headMaterial.color = Color.green;
         //    StartPatrolling();
         //}
-
-        Debug.DrawLine(transform.position, targetPosition);
     }
 
     private bool IsPlayertVisible(float distanceToPlayer)
@@ -100,9 +114,9 @@ public class MonsterAI : MonoBehaviour
         {
             return false;
         }
-        //check if there is a wall in between
+
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, directionToPlayer, out hit, rangeOfSight, playerMask | obstacleMask)) //if rwycast hits obstacleMask first player will not be visible
+        if (Physics.Raycast(transform.position, directionToPlayer, out hit, rangeOfSight, playerMask | obstacleMask))
         {
             if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Player"))
             {
@@ -141,7 +155,7 @@ public class MonsterAI : MonoBehaviour
     {
         navMeshAgent.SetDestination(targetPosition);
     }
-    private bool CanReachTarget() //can monster find exxisting path to the player
+    private bool CanReachTarget()
     {
         NavMeshPath path = new NavMeshPath();
         navMeshAgent.CalculatePath(targetPosition, path);
@@ -177,6 +191,13 @@ public class MonsterAI : MonoBehaviour
     }
     public void Retreat()
     {
+        if (IgnorePlayerCoroutine != null)
+        {
+            StopCoroutine(IgnorePlayerCoroutine);
+        }
+        IgnorePlayerCoroutine = StartCoroutine(IgnorePlayerAndPatrol());
+        navMeshAgent.speed = retreatSpeed;
+
         Vector3 directionAwayFromTarget = transform.position - player.position;
         directionAwayFromTarget.Normalize();
         Vector3 retreatPosition = transform.position + directionAwayFromTarget * retreatDistance;
@@ -232,19 +253,30 @@ public class MonsterAI : MonoBehaviour
     {
         Vector3 direction = (targetPosition - transform.position).normalized;
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
-        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f); // 5f to rotation speed
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f); // 5f = rotation speed
     }
 
     public void EnterLight()
     {
+        RotateTowardsTarget(player.position);
         Retreat();
+ 
         inLightedArea = true;
-        navMeshAgent.speed = slowedSpeed;
     }
 
     public void ExitLight()
     {
         inLightedArea = false;
         navMeshAgent.speed = normalSpeed;
+    }
+    private IEnumerator IgnorePlayerAndPatrol()
+    {
+        blockChasing = true;
+        isChasing = false;
+        //StartPatrolling();
+        yield return new WaitForSeconds(3f);
+        blockChasing = false;
+
+        IgnorePlayerCoroutine = null;
     }
 }

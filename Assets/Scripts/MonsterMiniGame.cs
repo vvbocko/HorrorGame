@@ -7,18 +7,19 @@ public class MonsterMiniGame : MonoBehaviour
 {
     [SerializeField] MonsterMiniGameAI minigameMonsterAI;
     [SerializeField] MonsterAI monsterAI;
+    [SerializeField] CameraSwitch cameraSwitch;
 
     [SerializeField] Transform[] spawnPoints;
     [SerializeField] Transform player;
     [SerializeField] float retreatTime = 2f;
 
     private bool isScared = false;
-    private bool minigameStarted = false;
-
+    private bool isMinigameStarted = false;
+    private bool isMiniGameCompleted = false;
 
     void Update()
     {
-        if (!isScared && minigameStarted)
+        if (!isScared && isMinigameStarted)
         {
             ChasePlayer();
         }
@@ -61,16 +62,24 @@ public class MonsterMiniGame : MonoBehaviour
     }
     public void StartMiniGame()
     {
-        minigameStarted = true;
+        if (isMiniGameCompleted)
+        { 
+            return;
+        }
+        isMinigameStarted = true;
         minigameMonsterAI.gameObject.SetActive(true);
         monsterAI.gameObject.SetActive(false);
         TeleportToRandomPoint();
     }
     public void StopMiniGame()
     {
-        minigameStarted = false;
+        isMinigameStarted = false;
+        isMiniGameCompleted = true;
         minigameMonsterAI.gameObject.SetActive(false);
         monsterAI.gameObject.SetActive(true);
         monsterAI.Retreat();
+        
+        
     }
+
 }

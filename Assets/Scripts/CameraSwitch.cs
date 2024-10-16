@@ -24,10 +24,11 @@ public class CameraSwitch : MonoBehaviour
 
     private float initialYRotation;
     private float currentRotation = 0f;
+    private float rotationProgress = 0f;
 
     private Quaternion targetRotation;
     private bool isRotating = false;
-    private float rotationProgress = 0f;
+
 
     void Start()
     {
@@ -52,11 +53,11 @@ public class CameraSwitch : MonoBehaviour
                 HandleLampRotation();
             }
 
-            if (Input.GetKeyDown(KeyCode.Q))
-            {
-                SetPlayerPosition();
-                SwitchToPlayerView();
-            }
+            //if (Input.GetKeyDown(KeyCode.Q))
+            //{
+            //    SetPlayerPosition();
+            //    SwitchToPlayerView();
+            //}
 
             if (Input.GetKeyDown(KeyCode.E))
             {
@@ -86,6 +87,7 @@ public class CameraSwitch : MonoBehaviour
 
     public void SwitchCamera()
     {
+
         if (isLampViewActive)
         {
             SwitchToPlayerView();
