@@ -17,6 +17,13 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] private float cooldownDuration = 5f;
     private float cooldownTimer = 0f;
+    
+    [SerializeField] private float walkFootstepInterval = 0.5f;
+    [SerializeField] private float sprintFootstepInterval = 0.3f;
+    private float footstepTimer;
+
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip[] footstepSounds;
 
     private bool isCooldownActive = false;
     private bool isSprinting = false;
@@ -29,6 +36,7 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         currentSprintPoints = maxSprintPoints;
+        footstepTimer = walkFootstepInterval;
         rigidBody.freezeRotation = true;
 
     }
@@ -50,7 +58,7 @@ public class PlayerMovement : MonoBehaviour
     private void HandleMovement()
     {
         float currentSpeed = walkSpeed;
-
+        float playFootstepsSoundsThreshold = 0 ;
         if (Input.GetKey(KeyCode.LeftShift) && currentSprintPoints > 0f && !isCooldownActive)
         {
             currentSpeed = sprintSpeed;
@@ -58,27 +66,32 @@ public class PlayerMovement : MonoBehaviour
             if (!isSprinting)
             {
                 isSprinting = true;
-                headBob.IncreaseHeadBob(); // Increase bobbing values
+                headBob.IncreaseHeadBob();
             }
+            playFootstepsSoundsThreshold = sprintFootstepInterval;
+            //footstepTimer = sprintFootstepInterval;
         }
         else
         {
             if (isSprinting)
             {
                 isSprinting = false;
-                headBob.RestartHeadBob(); // Reset bobbing values
+                headBob.RestartHeadBob();
             }
             if (currentSprintPoints < maxSprintPoints && !isCooldownActive)
             {
                 currentSprintPoints += Time.deltaTime * regenerateSpeed;
             }
+            playFootstepsSoundsThreshold = walkFootstepInterval;
+            //footstepTimer = walkFootstepInterval;//
         }
         if (currentSprintPoints <= 0f && !isCooldownActive)
         {
             isCooldownActive = true;
             cooldownTimer = cooldownDuration;
         }
-            currentSprintPoints = Mathf.Clamp(currentSprintPoints, 0, maxSprintPoints); 
+
+        currentSprintPoints = Mathf.Clamp(currentSprintPoints, 0, maxSprintPoints); 
 
         moveX = Input.GetAxis("Horizontal");
         moveZ = Input.GetAxis("Vertical") ;
@@ -97,5 +110,26 @@ public class PlayerMovement : MonoBehaviour
             Vector3 limitedVelocity = flatVelocity.normalized * currentSpeed;
             rigidBody.velocity = new Vector3(limitedVelocity.x, rigidBody.velocity.y, limitedVelocity.z);
         }
+        
+        if (flatVelocity.magnitude > 0 && (moveX != 0 || moveZ != 0))
+        {
+            footstepTimer += Time.deltaTime;
+
+            if (footstepTimer > playFootstepsSoundsThreshold)
+            {
+                PlayRandomFootStepSound();
+                footstepTimer = 0;
+            }
+        }
+        else
+        {
+            footstepTimer = 0;
+        }
+    }
+    private void PlayRandomFootStepSound()
+    {
+        int randomIndex = Random.Range(0, footstepSounds.Length);
+        AudioClip selectedClip = footstepSounds[randomIndex];
+        audioSource.PlayOneShot(selectedClip);
     }
 }

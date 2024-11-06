@@ -7,6 +7,8 @@ public class MonsterAI : MonoBehaviour
     [SerializeField] private NavMeshAgent navMeshAgent;
     [SerializeField] Transform player;
     [SerializeField] MeshRenderer headMeshRenderer;
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip[] footstepSounds;
     [SerializeField] LayerMask playerMask;
     [SerializeField] LayerMask obstacleMask;
     [SerializeField] private float rangeOfSight = 25f;
@@ -16,6 +18,9 @@ public class MonsterAI : MonoBehaviour
     [SerializeField] private float normalSpeed = 3.5f;
     [SerializeField] private float retreatSpeed = 5f;
     [SerializeField] private float retreatDistance = 10f;
+    
+    [SerializeField] private float footstepInterval = 0.6f;
+    private float footstepTimer;
 
     //[SerializeField] private Transform monstersBody;  // - to rotate only te body when monster is retreating
 
@@ -49,6 +54,7 @@ public class MonsterAI : MonoBehaviour
 
     private void Update()
     {
+        ProcesFootstepsSounds();
         if (!blockChasing && IsPlayertVisible(distanceToTarget)) 
         {            
             ChaseTarget();
@@ -313,5 +319,20 @@ public class MonsterAI : MonoBehaviour
         blockChasing = false;
 
         IgnorePlayerCoroutine = null;
+    }
+    private void PlayRandomFootStepSound()
+    {
+        int randomIndex = Random.Range(0, footstepSounds.Length);
+        AudioClip selectedClip = footstepSounds[randomIndex];
+        audioSource.PlayOneShot(selectedClip);
+    }
+    private void ProcesFootstepsSounds()
+    {
+        footstepTimer += Time.deltaTime;
+        if (footstepTimer > footstepInterval)
+        {
+            PlayRandomFootStepSound();
+            footstepTimer = 0;
+        }
     }
 }
