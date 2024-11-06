@@ -19,9 +19,9 @@ public class RepairPoints : MonoBehaviour
 
     void Start()
     {
-        cameraSwitch = FindObjectOfType<CameraSwitch>();
-        monsterMiniGame = FindObjectOfType<MonsterMiniGame>();
-        monsterAI = FindObjectOfType<MonsterAI>();
+        //cameraSwitch = FindObjectOfType<CameraSwitch>();
+        //monsterMiniGame = FindObjectOfType<MonsterMiniGame>();
+        //monsterAI = FindObjectOfType<MonsterAI>();
 
         lampLight.enabled = false;
         navMeshObstacle.enabled = false;
@@ -42,11 +42,12 @@ public class RepairPoints : MonoBehaviour
             lampLight.enabled = true;
             cameraSwitch.navMeshObstacle.enabled = true;
             cameraSwitch.interactableObject.enabled = false;
+
             cameraSwitch.SwitchToPlayerView();
             cameraSwitch.SetPlayerPosition();
+            monsterMiniGame.StopMiniGame();
 
             TeleportMonsterAI();
-            //Debug.Log("Play a short cutscene later");
         }
 
         pointSlider.value = currentPoints;

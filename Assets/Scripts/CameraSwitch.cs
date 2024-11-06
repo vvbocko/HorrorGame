@@ -32,12 +32,12 @@ public class CameraSwitch : MonoBehaviour
 
     void Start()
     {
-        player = FindObjectOfType<PlayerMovement>();
-        pointBar = FindObjectOfType<RepairPoints>();
-        flashlightMiniGame = FindObjectOfType<FlashlightMiniGame>();
-        monsterMiniGame = FindObjectOfType<MonsterMiniGame>();
-        navMeshObstacle = FindObjectOfType<NavMeshObstacle>();
-        interactableObject = FindObjectOfType<InteractableObject>();
+        //player = FindObjectOfType<PlayerMovement>();
+        //pointBar = FindObjectOfType<RepairPoints>();
+        //flashlightMiniGame = FindObjectOfType<FlashlightMiniGame>();
+        //monsterMiniGame = FindObjectOfType<MonsterMiniGame>();
+        //navMeshObstacle = FindObjectOfType<NavMeshObstacle>();
+        //interactableObject = FindObjectOfType<InteractableObject>();
 
         SwitchToPlayerView();
     }
@@ -95,6 +95,7 @@ public class CameraSwitch : MonoBehaviour
         else
         {
             SwitchToLampView();
+            monsterMiniGame.StartMiniGame();
         }
     }
 
@@ -107,7 +108,7 @@ public class CameraSwitch : MonoBehaviour
         
 
         flashlightMiniGame.gameObject.SetActive(true);
-        monsterMiniGame.StartMiniGame();
+        
         //monsterMiniGame.gameObject.SetActive(true);
 
         initialYRotation = lampCamera.transform.localEulerAngles.y;
@@ -119,11 +120,10 @@ public class CameraSwitch : MonoBehaviour
     {
         player.enabled = true;
         lampCamera.enabled = false;
-        playerCamera.enabled = true;
+        playerCamera.enabled = true; //
         isLampViewActive = false;
         isBoxViewActive = false;
 
-        monsterMiniGame.StopMiniGame();
         flashlightMiniGame.gameObject.SetActive(false);
         //monsterMiniGame.gameObject.SetActive(false);
 

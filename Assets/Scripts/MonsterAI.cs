@@ -17,11 +17,14 @@ public class MonsterAI : MonoBehaviour
     [SerializeField] private float retreatSpeed = 5f;
     [SerializeField] private float retreatDistance = 10f;
 
+    //[SerializeField] private Transform monstersBody;  // - to rotate only te body when monster is retreating
+
     private float distanceToTarget = Mathf.Infinity;
     private Vector3 targetPosition;
     private Vector3 lastKnownPosition;
     private bool isWalkPointSet;
     private bool isChasing;
+    private bool isRetreating;
     private bool blockChasing;
     public float range = 7.0f;
     private bool inLightedArea;
@@ -35,25 +38,26 @@ public class MonsterAI : MonoBehaviour
             //This is how you can access GameManager, through the "Instance" static property
             GameManager.Instance.SayHello();
         }
-        
+ 
         navMeshAgent = GetComponent<NavMeshAgent>();
-        headMaterial = headMeshRenderer.material;
         navMeshAgent.speed = normalSpeed;
+
+        headMaterial = headMeshRenderer.material;
         StartPatrolling();
 
     }
 
     private void Update()
     {
-        if (!blockChasing && IsPlayertVisible(distanceToTarget)) //
-        {
-            headMaterial.color = Color.yellow;
+        if (!blockChasing && IsPlayertVisible(distanceToTarget)) 
+        {            
             ChaseTarget();
+            headMaterial.color = Color.yellow;
         }
         else if (isChasing)
         {
-            headMaterial.color = Color.grey;
             GoToLastKnownPosition();
+            headMaterial.color = Color.grey;
         }
 
         Vector3 flatPosition = new Vector3 (transform.position.x, 0,transform.position.z);
@@ -72,13 +76,29 @@ public class MonsterAI : MonoBehaviour
                 StopCoroutine(IgnorePlayerCoroutine);
             }
             IgnorePlayerCoroutine = StartCoroutine(IgnorePlayerAndPatrol());
-            StartPatrolling();
+            if (inLightedArea) //canReachTarget and inLightedArea
+            {
+                Retreat();
+            }
+            else
+            {
+                StartPatrolling();
+            }
         }
         else
         {
             headMaterial.color = Color.green;
-            StartPatrolling();
+            if (inLightedArea) //canReachTarget and inLightedArea
+            {
+                Retreat();
+            }
+            else
+            {
+                StartPatrolling();
+            }
         }
+
+
 
         if (distanceToTarget <= attackRange)
         {
@@ -130,7 +150,7 @@ public class MonsterAI : MonoBehaviour
             }
         }
 
-        return false;
+        return false; //
     }
 
 
@@ -177,11 +197,13 @@ public class MonsterAI : MonoBehaviour
 
     private void ChaseTarget()
     {
+
+        isChasing = true;
         SetTarget(player.position);
         lastKnownPosition = player.position;
-        isChasing = true;
 
         RotateTowardsTarget(player.position);
+
     }
 
     private void GoToLastKnownPosition()
@@ -207,11 +229,15 @@ public class MonsterAI : MonoBehaviour
         directionAwayFromTarget.Normalize();
         Vector3 retreatPosition = transform.position + directionAwayFromTarget * retreatDistance;
 
-        NavMeshHit hit;
-        if (NavMesh.SamplePosition(retreatPosition, out hit, 1.0f, NavMesh.AllAreas))
+        Vector3 randomTarget;
+        if (RandomPoint(retreatPosition, range, out randomTarget))
         {
             //isWalkPointSet = true;
-            SetTarget(hit.position);
+            SetTarget(randomTarget);
+        }
+        else
+        {
+            retreatPosition = Vector3.zero;
         }
     }
     private void StartPatrolling()
@@ -258,20 +284,24 @@ public class MonsterAI : MonoBehaviour
     {
         Vector3 direction = (targetPosition - transform.position).normalized;
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
-        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f); // 5f = rotation speed
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f); // want to only rotate the "visual part" | 5f = rotation speed
     }
 
     public void EnterLight()
     {
-        RotateTowardsTarget(player.position);
-        Retreat();
- 
+        if (!inLightedArea)
+        {
+            Retreat();
+        }
         inLightedArea = true;
+        navMeshAgent.updateRotation = false;
+        RotateTowardsTarget(player.position);
     }
 
     public void ExitLight()
     {
         inLightedArea = false;
+        navMeshAgent.updateRotation = true;//
         navMeshAgent.speed = normalSpeed;
     }
     private IEnumerator IgnorePlayerAndPatrol()
