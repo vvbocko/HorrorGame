@@ -6,6 +6,7 @@ public class MonsterAI : MonoBehaviour
 {
     [SerializeField] private NavMeshAgent navMeshAgent;
     [SerializeField] Transform player;
+    [SerializeField] Jumpscare jumpscare;
     [SerializeField] MeshRenderer headMeshRenderer;
     [SerializeField] Animator animator;
     [SerializeField] private AudioSource audioSource;
@@ -27,7 +28,7 @@ public class MonsterAI : MonoBehaviour
     
     [SerializeField] private float footstepInterval = 0.6f;
     private float footstepTimer;
-    [SerializeField] private float teleportCooldown = 5f;
+    [SerializeField] private float teleportCooldown = 10f;
     private float nextTeleportTime;
 
     //[SerializeField] private Transform monstersBody;  // - to rotate only te body when monster is retreating
@@ -44,7 +45,10 @@ public class MonsterAI : MonoBehaviour
     Material headMaterial;
     Coroutine IgnorePlayerCoroutine;
     
-
+    // if monster close enough to the player - stop his movement or delete this monster and spawn another
+    // get reference to the camera and rotate it so it faces the monster
+    //play the animation
+    //wait for some seconds and then change the scene to the You died screen 
     private void Start()
     {
         if (GameManager.IsSpawned)
@@ -113,16 +117,25 @@ public class MonsterAI : MonoBehaviour
         }
 
 
-        if (isChasing && distanceToTarget <= attackRange)
+     
+
+        Vector3 flatPlayerPosition = new Vector3(player.position.x, 0, player.position.z);
+        float distanceToPlayer = Vector3.Distance(flatPosition, flatPlayerPosition);
+        
+        if (isChasing && distanceToPlayer <= attackRange)
         {
             headMaterial.color = Color.red;
-            AttackTarget();
+            //AttackTarget();
+            jumpscare.PlayJumpscare();
         }
-        Debug.Log("Distance to Target: " + distanceToTarget);
-        if (distanceToTarget >= teleportTriggerDistance)
+
+        Debug.LogFormat("Distance:{0}" ,distanceToPlayer);
+        //gracz czy kolejne miejsce
+        if (distanceToPlayer >= teleportTriggerDistance && Time.time >= nextTeleportTime)
         {
             TeleportMonster();
             nextTeleportTime = Time.time + teleportCooldown;
+           
         }
     }
 
@@ -226,6 +239,7 @@ public class MonsterAI : MonoBehaviour
             StopCoroutine(IgnorePlayerCoroutine);
         }
         IgnorePlayerCoroutine = StartCoroutine(IgnorePlayerAndPatrol());
+        //bool isCovering , level design aby mo¿na by³o wygraæ przegraæ aby rozwiazywanie zagadek dzia³a³o, UI - przegrana i menu z mo¿liwoœci zamykaniem aplikacji, plus sound design
         navMeshAgent.speed = retreatSpeed;
 
         Vector3 directionAwayFromTarget = transform.position - player.position;
@@ -256,7 +270,8 @@ public class MonsterAI : MonoBehaviour
     }
     private void AttackTarget()
     {
-        animator.SetTrigger("attack");
+        
+        animator.SetTrigger("jumpscare");
         Debug.Log("Jumpscare >:o");
     }
     private void RotateTowardsTarget(Vector3 targetPosition)
@@ -271,11 +286,6 @@ public class MonsterAI : MonoBehaviour
         if (!inLightedArea)
         {
             StartCoroutine(StopInLight());
-
-            //navMeshAgent.speed = 0;
-            //setTrigger("dmg")
-            //wait for(2 seconds)
-            //navMeshAgent.speed = retreatSpeed;
             Retreat();
         }
         inLightedArea = true;
@@ -286,7 +296,7 @@ public class MonsterAI : MonoBehaviour
     public void ExitLight()
     {
         inLightedArea = false;
-        navMeshAgent.updateRotation = true;//
+        navMeshAgent.updateRotation = true;
         navMeshAgent.speed = normalSpeed;
     }
     private IEnumerator IgnorePlayerAndPatrol()
@@ -303,7 +313,7 @@ public class MonsterAI : MonoBehaviour
     {
         navMeshAgent.speed = 0;
         animator.SetTrigger("damage");
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(10f);
         navMeshAgent.speed = retreatSpeed;
 
     }
@@ -337,8 +347,8 @@ public class MonsterAI : MonoBehaviour
             navMeshAgent.Warp(hit.position);
         }
     }
+    public void StopMovement()
+    {
+        navMeshAgent.enabled = false;
+    }
 }
-//gdy gracz oddali sie na 20 metrow - potwor teleportuje sie
-// wyznaczanei okreœlonego miejsca : 
-//teleportuje potwora przed graczem, za œcian¹ w odleg³oœci nie wiêkszej ni¿ ... i nie mniejszej ni¿ ...
-//potrzebny pierœcieñ œrodkiem gracz float minTeleportRange = 5; float maxTeleportRange = 10;

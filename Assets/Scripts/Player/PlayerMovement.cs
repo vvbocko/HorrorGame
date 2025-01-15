@@ -100,6 +100,7 @@ public class PlayerMovement : MonoBehaviour
         Vector3 movement = transform.forward * moveZ + transform.right * moveX;
         Vector3 newDirection = new Vector3(movement.x, 0, movement.z);
         newDirection = Vector3.Normalize(newDirection);
+
         //rigidBody.MovePosition(rigidBody.position + newDirection * currentSpeed * Time.deltaTime);
         rigidBody.AddForce(newDirection * currentSpeed, ForceMode.VelocityChange );
         

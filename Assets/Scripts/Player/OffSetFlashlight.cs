@@ -1,18 +1,27 @@
-
 using UnityEngine;
 
 public class OffSetFlashlight : MonoBehaviour
 {
-    [SerializeField] Vector3 vectorOffSet;
-    [SerializeField] GameObject followCameraX; // kamera followuje latarke
-    [SerializeField] float followSpeed = 1f;
-    void Start()
+    [SerializeField] private GameObject followFlashlight; // The flashlight the camera will follow
+    [SerializeField] private Vector3 offset;  // Adjust this in the inspector to fine-tune the camera's relative position
+    [SerializeField] private float followSpeed = 5f; // Speed at which the camera follows the flashlight
+
+    private void Start()
     {
-        vectorOffSet = transform.position - followCameraX.transform.position;
+        // Initialize the offset as the current relative position between the camera and the flashlight
+        offset = transform.position - followFlashlight.transform.position;
     }
-    void Update()
+
+    private void Update()
     {
-        transform.position = followCameraX.transform.position + vectorOffSet;
-        transform.rotation = Quaternion.Slerp(transform.rotation, followCameraX.transform.rotation, followSpeed * Time.deltaTime);
+        // Dynamically update the camera position by calculating the flashlight's position + offset
+        Vector3 targetPosition = followFlashlight.transform.position + offset;
+
+        // Smoothly follow the flashlight's position
+        transform.position = Vector3.Lerp(transform.position, targetPosition, followSpeed * Time.deltaTime);
+
+        // Smoothly follow the flashlight's rotation (if necessary)
+        Quaternion targetRotation = Quaternion.LookRotation(followFlashlight.transform.forward, Vector3.up);
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, followSpeed * Time.deltaTime);
     }
 }

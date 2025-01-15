@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : Singleton<GameManager>
 {
@@ -9,9 +10,9 @@ public class GameManager : Singleton<GameManager>
     private int totalMiniGames = 2;
     private int completedMiniGames = 0;
 
+
     public void SayHello()
     {
-
         Debug.LogFormat("Hello, I'm Game Manager! someData value: {0}", someData);
     }
 
@@ -27,6 +28,10 @@ public class GameManager : Singleton<GameManager>
     }
 
     private void WinGame()
+    {
+        Debug.Log("Wszystkie minigierki ukonczone");
+    }
+    private void LoseGame()
     {
         Debug.Log("Wszystkie minigierki ukonczone");
     }

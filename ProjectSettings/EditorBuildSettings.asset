@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/New Scene.unity
+    path: Assets/Scenes/Menu.unity
+    guid: 89752296a1adee7419e892e794675c05
+  - enabled: 1
+    path: Assets/Scenes/HorrorGame.unity
     guid: 61d95f5425c8faf41918a4d0ca30b9a8
   m_configObjects: {}

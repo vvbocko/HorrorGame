@@ -3,10 +3,12 @@ using UnityEngine;
 public class CameraRotation : MonoBehaviour
 {
     [SerializeField] private Transform playerBody;
+    [SerializeField] Jumpscare jumpscare;
 
     [Header("Camera Rotation")]
     [SerializeField] private float mouseSensitivity = 100f;
     [SerializeField] private float maxRotation = 80f;
+    bool isJumpscareActive = false;
 
     private float camRotX = 0f;
 
@@ -17,7 +19,14 @@ public class CameraRotation : MonoBehaviour
 
     void Update()
     {
-        RotationHandler();
+        if (!isJumpscareActive)
+        {
+            RotationHandler();
+        }
+        else
+        {
+            jumpscare.LookAtMonsterHead();
+        }
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             Cursor.lockState = CursorLockMode.None;
@@ -47,5 +56,9 @@ public class CameraRotation : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+    }
+    public void ActivateJumpscare()
+    {
+        isJumpscareActive = true;
     }
 }
