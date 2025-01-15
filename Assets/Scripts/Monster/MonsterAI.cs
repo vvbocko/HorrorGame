@@ -67,6 +67,7 @@ public class MonsterAI : MonoBehaviour
     private void Update()
     {
         ProcesFootstepsSounds();
+
         if (!blockChasing && IsPlayertVisible(distanceToTarget)) //widzi gracza i gonienie nie jest zablokowane
         {            
             ChaseTarget(); //goñ
@@ -269,8 +270,7 @@ public class MonsterAI : MonoBehaviour
         }
     }
     private void AttackTarget()
-    {
-        
+    {     
         animator.SetTrigger("jumpscare");
         Debug.Log("Jumpscare >:o");
     }
@@ -287,8 +287,8 @@ public class MonsterAI : MonoBehaviour
         {
             StartCoroutine(StopInLight());
             Retreat();
+            inLightedArea = true;
         }
-        inLightedArea = true;
         navMeshAgent.updateRotation = false;
         RotateTowardsTarget(player.position);
     }
@@ -299,6 +299,14 @@ public class MonsterAI : MonoBehaviour
         navMeshAgent.updateRotation = true;
         navMeshAgent.speed = normalSpeed;
     }
+    private IEnumerator StopInLight()
+    {
+        navMeshAgent.isStopped = true;
+        animator.SetTrigger("damage");
+        yield return new WaitForSeconds(1f);
+        navMeshAgent.isStopped = false;
+
+    }
     private IEnumerator IgnorePlayerAndPatrol()
     {
         blockChasing = true;
@@ -308,14 +316,6 @@ public class MonsterAI : MonoBehaviour
         blockChasing = false;
 
         IgnorePlayerCoroutine = null;
-    }
-    private IEnumerator StopInLight()
-    {
-        navMeshAgent.speed = 0;
-        animator.SetTrigger("damage");
-        yield return new WaitForSeconds(10f);
-        navMeshAgent.speed = retreatSpeed;
-
     }
     private void PlayRandomFootStepSound()
     {
