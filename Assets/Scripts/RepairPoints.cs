@@ -1,4 +1,3 @@
-using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
@@ -13,9 +12,11 @@ public class RepairPoints : MonoBehaviour
     [SerializeField] private NavMeshObstacle navMeshObstacle;
     [SerializeField] Transform[] spawnPoints;
 
-    private int maxPoints = 100;
-    private int currentPoints = 0;
-    private int pointsPerClick = 10;
+    [SerializeField] private float pointDropSpeed = 6f;
+
+    private float maxPoints = 100f;
+    private float currentPoints = 0f;
+    private float pointsPerClick = 5f;
 
     void Start()
     {
@@ -29,11 +30,23 @@ public class RepairPoints : MonoBehaviour
 
         pointSlider.maxValue = maxPoints;
         pointSlider.value = currentPoints;
+        
 
     }
-
+    private void Update()
+    {
+        PointReset();
+    }
+    private void PointReset()
+    {
+        if(currentPoints > 0 && currentPoints != maxPoints)
+        {
+            pointSlider.value -= pointDropSpeed * Time.deltaTime;
+        }
+    }
     public void AddPoints()
     {
+        bool isClicked = true;
         currentPoints += pointsPerClick;
 
         if (currentPoints >= maxPoints)

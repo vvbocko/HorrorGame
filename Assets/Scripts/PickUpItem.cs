@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class PickUpItem : MonoBehaviour
 {
@@ -73,6 +74,13 @@ public class PickUpItem : MonoBehaviour
             if (collider != null)
             {
                 collider.isTrigger = false;
+            }
+
+            InteractableObject interactable = heldObject.GetComponent<InteractableObject>();
+
+            if (interactable != null)
+            {
+                 playerInventory.RemoveItem(interactable.itemDefinition);
             }
             heldObject.transform.SetParent(null);
             heldObject = null;

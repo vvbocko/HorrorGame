@@ -117,13 +117,10 @@ public class MonsterAI : MonoBehaviour
             }
         }
 
-
-     
-
         Vector3 flatPlayerPosition = new Vector3(player.position.x, 0, player.position.z);
         float distanceToPlayer = Vector3.Distance(flatPosition, flatPlayerPosition);
         
-        if (isChasing && distanceToPlayer <= attackRange)
+        if (!inLightedArea && isChasing && distanceToPlayer <= attackRange)
         {
             headMaterial.color = Color.red;
             //AttackTarget();
@@ -303,7 +300,7 @@ public class MonsterAI : MonoBehaviour
     {
         navMeshAgent.isStopped = true;
         animator.SetTrigger("damage");
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.8f);
         navMeshAgent.isStopped = false;
 
     }
