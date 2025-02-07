@@ -1,8 +1,10 @@
 using System.Collections;
+using UnityEditor;
 using UnityEngine;
 
 public class Jumpscare : MonoBehaviour
 {
+    [SerializeField] PauseMenu pauseMenu;
     [SerializeField] CameraRotation cameraRotation;
     [SerializeField] MonsterAI monsterAI;
     [SerializeField] PlayerMovement playerMovement;
@@ -11,7 +13,6 @@ public class Jumpscare : MonoBehaviour
     [SerializeField] Transform monster;
     [SerializeField] Transform playerCamera;
     [SerializeField] Animator animator;
-    [SerializeField] Rigidbody playerRigidbody;
 
     [SerializeField] Transform monsterHead;
     [SerializeField] Transform monsterHand;
@@ -62,15 +63,13 @@ public class Jumpscare : MonoBehaviour
             {
                 monsterAI.StopMovement();
             }
-
             animator.SetTrigger("jumpscare");
-
+            pauseMenu.LoseGame();
 
             //LookAtMonsterHead();
             //StartCoroutine(CameraShake());
         }
     }
-
     public void LookAtMonsterHead()
     {
         Vector3 directionToHead = monsterHead.position - playerCamera.position;

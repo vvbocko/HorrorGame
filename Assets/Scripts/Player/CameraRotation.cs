@@ -12,11 +12,6 @@ public class CameraRotation : MonoBehaviour
 
     private float camRotX = 0f;
 
-    void Start()
-    {
-        CursorLock();
-    }
-
     void Update()
     {
         if (!isJumpscareActive)
@@ -26,15 +21,6 @@ public class CameraRotation : MonoBehaviour
         else
         {
             jumpscare.LookAtMonsterHead();
-        }
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-        }
-        else if (Input.GetMouseButtonDown(1))
-        {
-            CursorLock();
         }
     }
 
@@ -50,12 +36,6 @@ public class CameraRotation : MonoBehaviour
         camRotX = Mathf.Clamp(camRotX, -maxRotation, maxRotation);
         transform.localRotation = Quaternion.Euler(camRotX, 0f, 0f);
 
-    }
-
-    private void CursorLock()
-    {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
     }
     public void ActivateJumpscare()
     {
