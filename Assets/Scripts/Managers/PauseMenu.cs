@@ -11,14 +11,15 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] private TMP_Text playButton;
     [SerializeField] private TMP_Text title;
 
-    private bool isPaused = false;
-    private bool isLosed = false;
+    public bool isGameFinished = false;
+    public bool isPaused = false;
+
 
     void Start()
     {
         CursorLock();
         pauseMenuUI.SetActive(false);
-        resumeButton.onClick.AddListener(ResumeGame);
+        resumeButton.onClick.AddListener(GameManager.Instance.ResumeGame);
     }
 
     void Update()
@@ -27,57 +28,48 @@ public class PauseMenu : MonoBehaviour
         {
             if (isPaused)
             {
-                ResumeGame();
+                GameManager.Instance.ResumeGame();
                 CursorLock();
+                pauseMenuUI.SetActive(false);
             }
             else
             {
-                PauseGame();
+                GameManager.Instance.PauseGame();
                 CursorUnlock();
+                pauseMenuUI.SetActive(true);
 
             }
         }
     }
-    public void LoseGame()
-    {
-        isLosed = true;
-        StartCoroutine(ShowLoseScreen());
-    }
 
-    private IEnumerator ShowLoseScreen()
+    public void ShowLoseScreen()
     {
-        yield return new WaitForSeconds(3f);
-
-        isPaused = true;
-        Time.timeScale = 0;
+        
         pauseMenuUI.SetActive(true);
         playButton.text = "Try Again";
         title.text = "You Died";
         CursorUnlock();
     }
-
-    void PauseGame()
+    public void ShowWinScreen()
     {
-        isPaused = true;
-        Time.timeScale = 0;
         pauseMenuUI.SetActive(true);
+        playButton.text = "Play Again";
+        title.text = "You Escaped";
+        CursorUnlock();
     }
     public void ResumeGame()
     {
-        if (!isLosed)
+        if (!isGameFinished)
         {
-            isPaused = false;
-            Time.timeScale = 1;
-            pauseMenuUI.SetActive(false);
+            GameManager.Instance.ResumeGame();
+           
         }
         else
-        Restart();
+        {
+            GameManager.Instance.Restart();
+        }
     }
-    void Restart()
-    {
-        Time.timeScale = 1;
-        SceneManager.LoadScene(1);
-    }
+
     public void MenuExit()
     {
         Application.Quit();

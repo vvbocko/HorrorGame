@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Jumpscare : MonoBehaviour
 {
-    [SerializeField] PauseMenu pauseMenu;
     [SerializeField] CameraRotation cameraRotation;
     [SerializeField] MonsterAI monsterAI;
     [SerializeField] PlayerMovement playerMovement;
@@ -64,10 +63,7 @@ public class Jumpscare : MonoBehaviour
                 monsterAI.StopMovement();
             }
             animator.SetTrigger("jumpscare");
-            pauseMenu.LoseGame();
-
-            //LookAtMonsterHead();
-            //StartCoroutine(CameraShake());
+            GameManager.Instance.LoseGame();
         }
     }
     public void LookAtMonsterHead()
