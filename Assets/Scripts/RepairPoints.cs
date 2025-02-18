@@ -7,22 +7,19 @@ public class RepairPoints : MonoBehaviour
     [SerializeField] private CameraSwitch cameraSwitch;
     [SerializeField] private MonsterMiniGame monsterMiniGame;
     [SerializeField] private MonsterAI monsterAI;
-    [SerializeField] private Light lampLight;
+    [SerializeField] public Light lampLight;
     [SerializeField] private Slider pointSlider;
     [SerializeField] private NavMeshObstacle navMeshObstacle;
     [SerializeField] Transform[] spawnPoints;
 
     [SerializeField] private float pointDropSpeed = 6f;
 
-    private float maxPoints = 100f;
-    private float currentPoints = 0f;
+    public float maxPoints = 100f;
+    public float currentPoints = 0f;
     private float pointsPerClick = 5f;
 
     void Start()
     {
-        //cameraSwitch = FindObjectOfType<CameraSwitch>();
-        //monsterMiniGame = FindObjectOfType<MonsterMiniGame>();
-        //monsterAI = FindObjectOfType<MonsterAI>();
 
         lampLight.enabled = false;
         navMeshObstacle.enabled = false;
@@ -65,7 +62,7 @@ public class RepairPoints : MonoBehaviour
 
         pointSlider.value = currentPoints;
     }
-    private void TeleportMonsterAI()
+    public void TeleportMonsterAI()
     {
         int randomIndex = Random.Range(0, spawnPoints.Length);
         Vector3 randomTeleportPoint = spawnPoints[randomIndex].position;

@@ -355,15 +355,15 @@ ModelImporter:
       name: Demon|Punch2
       takeName: Demon|Punch2
       internalID: 3389643049034010190
-      firstFrame: 0
-      lastFrame: 19
+      firstFrame: 7
+      lastFrame: 13
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 0
+      loopTime: 1
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0

@@ -7,7 +7,9 @@ public class CameraSwitch : MonoBehaviour
     public Camera playerCamera;
     public Camera lampCamera;
     [SerializeField] private Transform playerSpawnPoint;
+    [SerializeField] private Transform monsterSpawnPoint;
     [SerializeField] private PlayerMovement player;
+    [SerializeField] private MonsterAI monster;
     [SerializeField] private RepairPoints pointBar;
 
     public NavMeshObstacle navMeshObstacle;
@@ -32,13 +34,6 @@ public class CameraSwitch : MonoBehaviour
 
     void Start()
     {
-        //player = FindObjectOfType<PlayerMovement>();
-        //pointBar = FindObjectOfType<RepairPoints>();
-        //flashlightMiniGame = FindObjectOfType<FlashlightMiniGame>();
-        //monsterMiniGame = FindObjectOfType<MonsterMiniGame>();
-        //navMeshObstacle = FindObjectOfType<NavMeshObstacle>();
-        //interactableObject = FindObjectOfType<InteractableObject>();
-
         SwitchToPlayerView();
     }
 
@@ -52,12 +47,6 @@ public class CameraSwitch : MonoBehaviour
             {
                 HandleLampRotation();
             }
-
-            //if (Input.GetKeyDown(KeyCode.Q))
-            //{
-            //    SetPlayerPosition();
-            //    SwitchToPlayerView();
-            //}
 
             if (Input.GetKeyDown(KeyCode.E))
             {
@@ -105,11 +94,8 @@ public class CameraSwitch : MonoBehaviour
         playerCamera.enabled = false;
         lampCamera.enabled = true;
         isLampViewActive = true;
-        
 
         flashlightMiniGame.gameObject.SetActive(true);
-        
-        //monsterMiniGame.gameObject.SetActive(true);
 
         initialYRotation = lampCamera.transform.localEulerAngles.y;
         currentRotation = 0f;
@@ -120,12 +106,11 @@ public class CameraSwitch : MonoBehaviour
     {
         player.enabled = true;
         lampCamera.enabled = false;
-        playerCamera.enabled = true; //
+        playerCamera.enabled = true;
         isLampViewActive = false;
         isBoxViewActive = false;
 
         flashlightMiniGame.gameObject.SetActive(false);
-        //monsterMiniGame.gameObject.SetActive(false);
 
         targetRotation = lampCamera.transform.rotation;
         pointBar.SetVisibility(false);
@@ -133,7 +118,8 @@ public class CameraSwitch : MonoBehaviour
 
     private void StartElectricBoxView()
     {
-        targetRotation = Quaternion.Euler(0f, -180f, 0f);
+        float currentYRotation = transform.eulerAngles.y;
+        targetRotation = Quaternion.Euler(0f, currentYRotation - 360f, 0f);
         isRotating = true;
         rotationProgress = 0f;
     }
@@ -166,5 +152,11 @@ public class CameraSwitch : MonoBehaviour
     {
         player.transform.position = playerSpawnPoint.position;
         player.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+    }
+
+    public void SetMonsterPosition()
+    {
+        monster.transform.position = monsterSpawnPoint.position;
+        monster.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
     }
 }

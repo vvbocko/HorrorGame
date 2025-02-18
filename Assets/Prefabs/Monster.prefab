@@ -236,7 +236,6 @@ MonoBehaviour:
   monster: {fileID: 6518361165102034125}
   playerCamera: {fileID: 0}
   animator: {fileID: 3977640382225475857}
-  playerRigidbody: {fileID: 0}
   monsterHead: {fileID: 4775465804059919113}
   monsterHand: {fileID: 4359803466919986293}
   lookSpeed: 50

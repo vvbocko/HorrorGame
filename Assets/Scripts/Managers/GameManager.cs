@@ -7,7 +7,7 @@ public class GameManager : Singleton<GameManager>
 {
     private int someData = 99;
 
-    private int totalMiniGames = 2;
+    [SerializeField] private int totalMiniGames = 2;
     private int completedMiniGames = 0;
 
     [SerializeField] private WinninGame winningGame;

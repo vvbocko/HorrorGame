@@ -6,6 +6,7 @@ public class WinninGame : MonoBehaviour
 {
     [SerializeField] private GameObject container;
     [SerializeField] private GameObject wall;
+
     void Start()
     {
         container.transform.position = new Vector3(6.07f, 10.8127f, -85.69f);
@@ -17,6 +18,10 @@ public class WinninGame : MonoBehaviour
     }
     private void OnTriggerExit(Collider other)
     {
-        GameManager.Instance.WinGame();
+        PlayerMovement player = other.GetComponent<PlayerMovement>();
+        if (player != null)
+        {
+            GameManager.Instance.WinGame();
+        }
     }
 }

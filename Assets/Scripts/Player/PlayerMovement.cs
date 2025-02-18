@@ -96,7 +96,6 @@ public class PlayerMovement : MonoBehaviour
         moveX = Input.GetAxis("Horizontal");
         moveZ = Input.GetAxis("Vertical") ;
 
-        //transform.position = cam.transform.forward * moveZ + cam.transform.right * moveX;
         Vector3 movement = transform.forward * moveZ + transform.right * moveX;
         Vector3 newDirection = new Vector3(movement.x, 0, movement.z);
         newDirection = Vector3.Normalize(newDirection);

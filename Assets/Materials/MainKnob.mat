@@ -44,9 +44,9 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _GlossMapScale: 0.41
+    - _GlossMapScale: 0.569
     - _Glossiness: 0.581
     - _GlossyReflections: 0
     m_Colors:
-    - _Color: {r: 0.7735849, g: 0.7735849, b: 0.7735849, a: 1}
+    - _Color: {r: 0.26415092, g: 0.26415092, b: 0.26415092, a: 1}
   m_BuildTextureStacks: []

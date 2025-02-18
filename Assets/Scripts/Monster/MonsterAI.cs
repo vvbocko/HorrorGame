@@ -5,14 +5,14 @@ using UnityEngine.AI;
 public class MonsterAI : MonoBehaviour
 {
     [SerializeField] private NavMeshAgent navMeshAgent;
-    [SerializeField] Transform player;
-    [SerializeField] Jumpscare jumpscare;
-    [SerializeField] MeshRenderer headMeshRenderer;
-    [SerializeField] Animator animator;
+    [SerializeField] private Transform player;
+    [SerializeField] private Jumpscare jumpscare;
+    [SerializeField] private MeshRenderer headMeshRenderer;
+    [SerializeField] private Animator animator;
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip[] footstepSounds;
-    [SerializeField] LayerMask playerMask;
-    [SerializeField] LayerMask obstacleMask;
+    [SerializeField] private LayerMask playerMask;
+    [SerializeField] private LayerMask obstacleMask;
     [SerializeField] private float rangeOfSight = 25f;
     [SerializeField] private float sightAngle = 50f;
     [SerializeField] private float attackRange = 1.5f;
@@ -53,7 +53,7 @@ public class MonsterAI : MonoBehaviour
     {
         if (GameManager.IsSpawned)
         {
-            GameManager.Instance.SayHello();             //This is how you can access GameManager, through the "Instance" static property
+            GameManager.Instance.SayHello();
         }
  
         navMeshAgent = GetComponent<NavMeshAgent>();
@@ -68,14 +68,14 @@ public class MonsterAI : MonoBehaviour
     {
         ProcesFootstepsSounds();
 
-        if (!blockChasing && IsPlayertVisible(distanceToTarget)) //widzi gracza i gonienie nie jest zablokowane
+        if (!blockChasing && IsPlayertVisible(distanceToTarget))
         {            
-            ChaseTarget(); //goñ
+            ChaseTarget();
             headMaterial.color = Color.yellow;
         }
-        else if (isChasing)// je¿eli goni ale gracz nie jest widoczny
+        else if (isChasing)
         {
-            GoToLastKnownPosition(); //idŸ do ostatniej znanej pozycji
+            GoToLastKnownPosition();
             headMaterial.color = Color.grey;
         }
 
@@ -84,11 +84,11 @@ public class MonsterAI : MonoBehaviour
 
         distanceToTarget = Vector3.Distance(flatPosition, flatTargetPosition); //dystans miedzy pozycjami potwora i targetu
 
-        if (distanceToTarget > minTargetDistance && CanReachTarget()) //gdy potwór nie dotar³ jeszcze do pozycji targeta && mo¿e do niego dojœæ
+        if (distanceToTarget > minTargetDistance && CanReachTarget())
         {
             GoToTarget();  
         }
-        else if (isChasing && !CanReachTarget()) //gdy goni grscza && nie mo¿e dojœæ /////////
+        else if (isChasing && !CanReachTarget())
         {
             if(IgnorePlayerCoroutine != null)
             {
