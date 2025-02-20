@@ -6,7 +6,7 @@ public class CameraRotation : MonoBehaviour
     [SerializeField] Jumpscare jumpscare;
 
     [Header("Camera Rotation")]
-    [SerializeField] private float mouseSensitivity = 100f;
+    public float mouseSensitivity = 100f;
     [SerializeField] private float maxRotation = 80f;
     bool isJumpscareActive = false;
 

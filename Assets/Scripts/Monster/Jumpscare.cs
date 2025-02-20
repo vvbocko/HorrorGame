@@ -12,6 +12,8 @@ public class Jumpscare : MonoBehaviour
     [SerializeField] Transform monster;
     [SerializeField] Transform playerCamera;
     [SerializeField] Animator animator;
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip jumpscareSound;
 
     [SerializeField] Transform monsterHead;
     [SerializeField] Transform monsterHand;
@@ -63,6 +65,7 @@ public class Jumpscare : MonoBehaviour
                 monsterAI.StopMovement();
             }
             animator.SetTrigger("jumpscare");
+            audioSource.PlayOneShot(jumpscareSound);
             GameManager.Instance.LoseGame();
         }
     }

@@ -2038,13 +2038,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3559262475218844254}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.41592544, y: 0.57184446, z: -0.41592544, w: 0.57184446}
+  m_LocalRotation: {x: 0.45451948, y: 0.5416752, z: -0.45451948, w: 0.5416752}
   m_LocalPosition: {x: 11.370001, y: 32.88, z: -0.0000010549373}
   m_LocalScale: {x: 4.4247274, y: 4.0913897, z: 2.673634}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6081334000231777042}
-  m_LocalEulerAnglesHint: {x: 107.94, y: -90, z: -180}
+  m_LocalEulerAnglesHint: {x: 100, y: -90, z: -180}
 --- !u!108 &4192905841789056439
 Light:
   m_ObjectHideFlags: 0
@@ -2056,14 +2056,14 @@ Light:
   serializedVersion: 10
   m_Type: 0
   m_Shape: 0
-  m_Color: {r: 0.8318583, g: 0.8742138, b: 0.59105647, a: 1}
-  m_Intensity: 1.8
-  m_Range: 31
-  m_SpotAngle: 109
+  m_Color: {r: 0.8490566, g: 0.8383831, b: 0.67550725, a: 1}
+  m_Intensity: 8.47
+  m_Range: 19.6
+  m_SpotAngle: 104
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 2
+    m_Type: 1
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -2096,10 +2096,10 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 1
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
-  m_BounceIntensity: 1
+  m_BounceIntensity: 9.1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
@@ -2527,6 +2527,7 @@ GameObject:
   - component: {fileID: 8485181033338563591}
   - component: {fileID: 5936319277167636847}
   - component: {fileID: 4793814765729589154}
+  - component: {fileID: 8825094362175657932}
   m_Layer: 0
   m_Name: MiniGame Monster
   m_TagString: Monster
@@ -2683,7 +2684,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: -334000983
   m_Radius: 0.6
-  m_Speed: 3.5
+  m_Speed: 4.3
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -2708,6 +2709,102 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   agent: {fileID: 5936319277167636847}
+--- !u!82 &8825094362175657932
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4128726893109912584}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &4175282538682423896
 GameObject:
   m_ObjectHideFlags: 0
@@ -3497,7 +3594,7 @@ Transform:
   m_GameObject: {fileID: 5657621830988025042}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.08, y: -1.2190393, z: 1.55}
+  m_LocalPosition: {x: 1.08, y: -1.22, z: 1.98}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5197,6 +5294,10 @@ MonoBehaviour:
   flashlight: {fileID: 1350965335873707602}
   lightCollider: {fileID: 8785684668006026686}
   monsterMiniGame: {fileID: 7566616066248076185}
+  audioSource: {fileID: 0}
+  humAudioSource: {fileID: 0}
+  clickSound: {fileID: 0}
+  humSound: {fileID: 0}
 --- !u!136 &8785684668006026686
 CapsuleCollider:
   m_ObjectHideFlags: 0

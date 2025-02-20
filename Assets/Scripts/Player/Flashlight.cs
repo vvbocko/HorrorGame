@@ -4,6 +4,10 @@ public class Flashlight : MonoBehaviour
 {
     [SerializeField] private MonsterAI monster;
     [SerializeField] private Light flashlight;
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioSource humAudioSource;
+    [SerializeField] private AudioClip clickSound;
+    [SerializeField] private AudioClip humSound;
     [SerializeField] private KeyCode toggleKey = KeyCode.F;
     [SerializeField] private float flashlightRange = 15f;
     [SerializeField] private LayerMask monsterMask;
@@ -26,16 +30,44 @@ public class Flashlight : MonoBehaviour
     {
         if (Input.GetKeyDown(toggleKey))
         {
-            flashlight.enabled = !flashlight.enabled;
-            if (!flashlight.enabled && monster != null)
-            {
-                monster.ExitLight();
-            }
+            ToggleFlashlight();
         }
 
         if (flashlight.enabled)
         {
             DetectMonster();
+        }
+    }
+    private void ToggleFlashlight()
+    {
+        flashlight.enabled = !flashlight.enabled;
+
+        if (clickSound != null)
+        {
+            audioSource.PlayOneShot(clickSound);
+        }
+
+        if (flashlight.enabled)
+        {
+            if (humSound != null && !humAudioSource.isPlaying)
+            {
+                humAudioSource.clip = humSound;
+                humAudioSource.loop = true;
+                humAudioSource.Play();
+            }
+        }
+        else
+        {
+            if (humAudioSource.isPlaying)
+            {
+                humAudioSource.clip = null;
+                humAudioSource.Stop();
+            }
+
+            if (monster != null)
+            {
+                monster.ExitLight();
+            }
         }
     }
     private void DetectMonster()

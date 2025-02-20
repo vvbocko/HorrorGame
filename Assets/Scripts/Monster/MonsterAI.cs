@@ -11,6 +11,7 @@ public class MonsterAI : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip[] footstepSounds;
+    [SerializeField] private AudioClip retreatSound;
     [SerializeField] private LayerMask playerMask;
     [SerializeField] private LayerMask obstacleMask;
     [SerializeField] private float rangeOfSight = 25f;
@@ -300,6 +301,7 @@ public class MonsterAI : MonoBehaviour
     {
         navMeshAgent.isStopped = true;
         animator.SetTrigger("damage");
+        audioSource.PlayOneShot(retreatSound);
         yield return new WaitForSeconds(0.8f);
         navMeshAgent.isStopped = false;
 
