@@ -33,6 +33,8 @@ public class MonsterAI : MonoBehaviour
     private float nextTeleportTime;
 
     //[SerializeField] private Transform monstersBody;  // - to rotate only te body when monster is retreating
+    public float retreatCooldown = 5f;
+    private float lastTimeInLight = -Mathf.Infinity;
 
     private float distanceToTarget = Mathf.Infinity;
     public float range = 7.0f;
@@ -281,14 +283,19 @@ public class MonsterAI : MonoBehaviour
 
     public void EnterLight()
     {
+        if(Time.time - lastTimeInLight < retreatCooldown)
+        {
+            return;
+        }
+        lastTimeInLight = Time.time; 
         if (!inLightedArea)
         {
             StartCoroutine(StopInLight());
             Retreat();
             inLightedArea = true;
+            navMeshAgent.updateRotation = false;
+            RotateTowardsTarget(player.position);
         }
-        navMeshAgent.updateRotation = false;
-        RotateTowardsTarget(player.position);
     }
 
     public void ExitLight()
