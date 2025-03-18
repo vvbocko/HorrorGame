@@ -1,3 +1,4 @@
+using TMPro;
 using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
@@ -11,6 +12,10 @@ public class CameraSwitch : MonoBehaviour
     [SerializeField] private PlayerMovement player;
     [SerializeField] private MonsterAI monster;
     [SerializeField] private RepairPoints pointBar;
+    [SerializeField] private TMP_Text clickToEnter;
+    [SerializeField] private TMP_Text clickToExit;
+    [SerializeField] private TMP_Text holdF;
+    [SerializeField] private TMP_Text spamQ;
 
     public NavMeshObstacle navMeshObstacle;
     public InteractableObject interactableObject;
@@ -35,6 +40,10 @@ public class CameraSwitch : MonoBehaviour
     void Start()
     {
         SwitchToPlayerView();
+        clickToExit.enabled = false;
+        clickToEnter.enabled = false;
+        holdF.enabled = false;
+        spamQ.enabled = false;
     }
 
     void Update()
@@ -52,12 +61,23 @@ public class CameraSwitch : MonoBehaviour
             {
                 if (!isBoxViewActive)
                 {
+                    clickToExit.enabled = true;
+                    clickToEnter.enabled = false;
+                    spamQ.enabled = true;
+                    holdF.enabled = false;
+
                     StartElectricBoxView();
                     isBoxViewActive = true;
                     pointBar.SetVisibility(true);
+                    
                 }
                 else
                 {
+                    clickToExit.enabled = false;
+                    clickToEnter.enabled = true;
+                    spamQ.enabled = false;
+                    holdF.enabled = true;
+
                     isBoxViewActive = false;
                     pointBar.SetVisibility(false);
                 }
@@ -67,7 +87,7 @@ public class CameraSwitch : MonoBehaviour
                 RotateTowardsTarget();
             }
 
-            if (Input.GetKeyDown(KeyCode.Space) && isBoxViewActive)
+            if (Input.GetKeyDown(KeyCode.Q) && isBoxViewActive)
             {
                 pointBar.AddPoints();
             }
@@ -83,6 +103,9 @@ public class CameraSwitch : MonoBehaviour
         }
         else
         {
+            clickToEnter.enabled = true;
+            holdF.enabled = true;
+
             SwitchToLampView();
             monsterMiniGame.StartMiniGame();
         }
@@ -114,6 +137,9 @@ public class CameraSwitch : MonoBehaviour
 
         targetRotation = lampCamera.transform.rotation;
         pointBar.SetVisibility(false);
+
+        clickToExit.enabled = false;
+        spamQ.enabled = false;
     }
 
     private void StartElectricBoxView()
@@ -157,6 +183,6 @@ public class CameraSwitch : MonoBehaviour
     public void SetMonsterPosition()
     {
         monster.transform.position = monsterSpawnPoint.position;
-        monster.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
+        monster.transform.rotation = Quaternion.Euler(0f, 180f, 0f);     
     }
 }

@@ -69,7 +69,6 @@ public class PlayerMovement : MonoBehaviour
                 headBob.IncreaseHeadBob();
             }
             playFootstepsSoundsThreshold = sprintFootstepInterval;
-            //footstepTimer = sprintFootstepInterval;
         }
         else
         {
@@ -83,7 +82,6 @@ public class PlayerMovement : MonoBehaviour
                 currentSprintPoints += Time.deltaTime * regenerateSpeed;
             }
             playFootstepsSoundsThreshold = walkFootstepInterval;
-            //footstepTimer = walkFootstepInterval;//
         }
         if (currentSprintPoints <= 0f && !isCooldownActive)
         {

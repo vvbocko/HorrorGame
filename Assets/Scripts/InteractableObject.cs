@@ -6,6 +6,8 @@ public class InteractableObject : MonoBehaviour
     [SerializeField] public UnityEvent onInteraction;
     [SerializeField] public Transform interactablePoint = null;
     [SerializeField] private bool isPickable;
+    [SerializeField] public bool isInteractable = true;
+    //[SerializeField] private bool isRotatable;
     [SerializeField] public ItemDefinition itemDefinition;
     private bool isSubscribed = false;
     public bool IsPickable
@@ -15,6 +17,13 @@ public class InteractableObject : MonoBehaviour
             return isPickable;
         }
     }
+    //public bool IsInteractable
+    //{
+    //    get
+    //    {
+    //        return isRotatable;
+    //    }
+    //}
     public Transform GetInteractablePointTranform()
     {
         if(interactablePoint != null)

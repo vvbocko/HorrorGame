@@ -9,37 +9,39 @@ public class FlashlightMiniGame : MonoBehaviour
     [SerializeField] private AudioSource humAudioSource;
     [SerializeField] private AudioClip clickSound;
     [SerializeField] private AudioClip humSound;
-    private bool isHumSoundPlaying = false;
+
     void Start()
     {
         flashlight.enabled = false;
         lightCollider.enabled = false;
-        isHumSoundPlaying = false;
+        humAudioSource.loop = true;
+        humAudioSource.clip = humSound;
+        humAudioSource.Stop();
     }
 
     void Update()
     {
-        if (Input.GetButton("Fire1"))
+        if (Input.GetKeyDown(KeyCode.F))
         {
             audioSource.PlayOneShot(clickSound);
-            //if (!audioSource.isPlaying && audioSource != null)
-            //{
-            //    audioSource.PlayOneShot(humSound);
-            //    audioSource.loop = false;
-            //    isHumSoundPlaying = true;
-            //}
             flashlight.enabled = true;
             lightCollider.enabled = true;
+            
+            if (!humAudioSource.isPlaying)
+            {
+                humAudioSource.Play();
+            }
         }
-        else
+        else if (Input.GetKeyUp(KeyCode.F))
         {
-            //if (!isHumSoundPlaying)
-            //{
-            //    audioSource = null;
-            //}
-            //audioSource.PlayOneShot(clickSound);      
+            audioSource.PlayOneShot(clickSound);
             flashlight.enabled = false;
             lightCollider.enabled = false;
+
+            if (humAudioSource.isPlaying)
+            {
+                humAudioSource.Stop();
+            }
         }
     }
 

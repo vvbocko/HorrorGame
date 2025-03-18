@@ -10,20 +10,30 @@ public class PickUpItem : MonoBehaviour
     [SerializeField] private PlayerInventory playerInventory;
     private InteractableObject interactableObject;
     private GameObject heldObject;
+    private bool InRotationMode = false;
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetButtonDown("Fire1"))
         {
             if (heldObject == null)
             {
                 TryPickUp();
             }
         }
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetButtonDown("Fire2"))
         {
             DropObject();
         }
+        //if (Input.GetKeyDown(KeyCode.R) && !InRotationMode) //in rotation mode time stop as well (like in pause game)
+        //{
+        //    //get it to the middle
+        //    //RotateObject();
+        //}
+        //else if(Input.GetKeyDown(KeyCode.R) && !InRotationMode)
+        //{
+        //    //get back
+        //}
 
     }
     private void TryPickUp()

@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class RepairPoints : MonoBehaviour
 {
     [SerializeField] private CameraSwitch cameraSwitch;
+    [SerializeField] private InteractableObject interactableObject;
     [SerializeField] private MonsterMiniGame monsterMiniGame;
     [SerializeField] private MonsterAI monsterAI;
     [SerializeField] public Light lampLight;
@@ -52,6 +53,7 @@ public class RepairPoints : MonoBehaviour
             lampLight.enabled = true;
             cameraSwitch.navMeshObstacle.enabled = true;
             cameraSwitch.interactableObject.enabled = false;
+            interactableObject.isInteractable = false;
 
             cameraSwitch.SwitchToPlayerView();
             cameraSwitch.SetPlayerPosition();

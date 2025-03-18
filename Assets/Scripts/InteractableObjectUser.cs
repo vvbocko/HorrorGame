@@ -18,7 +18,7 @@ public class InteractableObjectUser : MonoBehaviour
             Debug.DrawLine(transform.position, interactableObject.GetInteractablePointTranform().position, Color.red);
         }
         
-        if (Input.GetButtonDown("Fire1") && IsInteractableObjectVisible())
+        if (Input.GetButtonDown("Fire1") && IsInteractableObjectVisible() && interactableObject.isInteractable)
         {
 
             onClick?.Invoke();

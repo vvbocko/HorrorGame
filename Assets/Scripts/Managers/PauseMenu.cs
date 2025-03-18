@@ -9,9 +9,11 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] private CameraRotation cameraRotation;
     [SerializeField] private GameObject pauseMenuUI;
     [SerializeField] private GameObject settingsMenuUI;
+    [SerializeField] private GameObject controlsMenuUI;
+    [SerializeField] private Image gameTitle;
     [SerializeField] private Button resumeButton;
     [SerializeField] private TMP_Text playButton;
-    [SerializeField] private TMP_Text title;
+    [SerializeField] private TMP_Text gameText;
     [SerializeField] private TMP_Text sensitivityNumber;
     [SerializeField] private Slider sensitivitySlider;
 
@@ -21,9 +23,12 @@ public class PauseMenu : MonoBehaviour
 
     void Start()
     {
+        gameText.text = " ";
         CursorLock();
         pauseMenuUI.SetActive(false);
         settingsMenuUI.SetActive(false);
+        controlsMenuUI.SetActive(false);
+        gameTitle.enabled = true;
 
         resumeButton.onClick.AddListener(GameManager.Instance.ResumeGame);
         sensitivitySlider.value = cameraRotation.mouseSensitivity;
@@ -33,7 +38,7 @@ public class PauseMenu : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             if (isPaused)
             {
@@ -55,15 +60,17 @@ public class PauseMenu : MonoBehaviour
     {
         
         pauseMenuUI.SetActive(true);
+        gameTitle.enabled = false;
         playButton.text = "Try Again";
-        title.text = "You Died";
+        gameText.text = "You Died";
         CursorUnlock();
     }
     public void ShowWinScreen()
     {
         pauseMenuUI.SetActive(true);
+        gameTitle.enabled = false;
         playButton.text = "Play Again";
-        title.text = "You Escaped";
+        gameText.text = "You Escaped";
         CursorUnlock();
     }
     public void ResumeGame()
@@ -71,7 +78,8 @@ public class PauseMenu : MonoBehaviour
         if (!isGameFinished)
         {
             GameManager.Instance.ResumeGame();
-           
+            pauseMenuUI.SetActive(false);
+
         }
         else
         {
@@ -99,6 +107,16 @@ public class PauseMenu : MonoBehaviour
 
         float precentage = Mathf.Round((value / 100f) * 100f);
         sensitivityNumber.text = precentage + "%";
+
+    }
+    public void OpenControls()
+    {
+        controlsMenuUI.SetActive(true);
+
+    }
+    public void CloseControls()
+    {
+        controlsMenuUI.SetActive(false);
 
     }
 
